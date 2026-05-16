@@ -52,6 +52,14 @@
 // })
 
 
+const buffer = require("buffer");
+if (!buffer.SlowBuffer) {
+  buffer.SlowBuffer = buffer.Buffer;
+}
+if (typeof global.SlowBuffer === "undefined") {
+  global.SlowBuffer = buffer.SlowBuffer;
+}
+
 const express = require("express");
 const app = express();
 

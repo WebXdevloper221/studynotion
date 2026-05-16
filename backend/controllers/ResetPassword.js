@@ -96,6 +96,7 @@
 
 
 
+const mongoose = require('mongoose')
 const User = require("../models/User")
 const crypto = require('crypto')
 const mailSender = require('../utils/mailSender');
@@ -105,6 +106,13 @@ exports.resetPasswordToken = async (req,res) => {
 
    try {
        const {email} = req.body;
+
+       if (mongoose.connection.readyState !== 1) {
+           return res.status(500).json({
+               success: false,
+               message: 'Database unavailable. Please try again later.'
+           })
+       }
 
        if(!email){
            return res.status(400).json({

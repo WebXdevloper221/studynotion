@@ -1,19 +1,53 @@
 
 
 const mongoose = require('mongoose')
+const { MongoMemoryServer } = require('mongodb-memory-server')
 require('dotenv').config()
 
-exports.connectDB = () => {
-    mongoose.connect("mongodb://localhost:27017/StudyNotion", {
-        useUnifiedTopology:true,
-        useNewUrlParser: true
-    })
-    .then(()=>{
-        console.log("DB connection successfull!")
-    })
-    .catch( (error) => {
-        console.log("DB Connection Failed");
-        console.error(error);
-        process.exit(1);
-    } )
+mongoose.set('bufferCommands', false)
+
+let mongoServer = null
+
+async function connectToMongo(uri) {
+  return mongoose.connect(uri, {
+    useUnifiedTopology: true,
+    useNewUrlParser: true,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    bufferCommands: false,
+  })
+}
+
+async function startMemoryMongo() {
+  if (!mongoServer) {
+    mongoServer = await MongoMemoryServer.create()
+    const uri = mongoServer.getUri()
+    console.log('Started in-memory MongoDB at', uri)
+    return uri
+  }
+  return mongoServer.getUri()
+}
+
+exports.connectDB = async () => {
+    const mongoUri = process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://localhost:27017/StudyNotion'
+    try {
+        await connectToMongo(mongoUri)
+        console.log('DB connection successful!')
+        return
+    } catch (error) {
+        console.warn('DB Connection Failed:', error.message || error)
+    }
+
+    if (!process.env.MONGODB_URI && !process.env.MONGO_URI) {
+      try {
+        const memoryUri = await startMemoryMongo()
+        await connectToMongo(memoryUri)
+        console.log('Connected to in-memory MongoDB!')
+        return
+      } catch (memoryError) {
+        console.error('In-memory MongoDB failed:', memoryError)
+      }
+    }
+
+    console.error('No MongoDB connection could be established.')
 }

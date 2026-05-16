@@ -35,11 +35,16 @@ const mailSender = async (email, title, body) => {
       throw new Error("MAIL_USER or MAIL_PASS is missing in backend .env");
     }
 
-    let transporter = nodemailer.createTransport({
-      service: "gmail", // use gmail service
+    const transporter = nodemailer.createTransport({
+      host: process.env.MAIL_HOST || "smtp.gmail.com",
+      port: Number(process.env.MAIL_PORT || 465),
+      secure: true,
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
+      },
+      tls: {
+        rejectUnauthorized: false,
       },
     });
 
@@ -50,10 +55,10 @@ const mailSender = async (email, title, body) => {
       html: body,
     });
 
-    console.log(" Mail sent:", info.response);
+    console.log("Mail sent:", info.response);
     return info;
   } catch (error) {
-    console.log(" Error in mailSender:", error.message);
+    console.log("Error in mailSender:", error);
     throw error;
   }
 };
