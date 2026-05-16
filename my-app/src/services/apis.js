@@ -1,4 +1,8 @@
-const BASE_URL = (process.env.REACT_APP_BASE_URL || "http://localhost:5000") + "/api/v1"
+const rawBaseUrl = process.env.REACT_APP_BASE_URL || "http://localhost:5000"
+const normalizedBaseUrl = rawBaseUrl.replace(/\/+$/, "")
+const BASE_URL = normalizedBaseUrl.endsWith("/api/v1")
+  ? normalizedBaseUrl
+  : normalizedBaseUrl + "/api/v1"
 
 // AUTH ENDPOINTS
 export const endpoints = {
