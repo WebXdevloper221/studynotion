@@ -49,5 +49,7 @@ exports.connectDB = async () => {
       }
     }
 
-    console.error('No MongoDB connection could be established.')
+    const err = new Error('No MongoDB connection could be established.')
+    console.error(err.message)
+    throw err
 }

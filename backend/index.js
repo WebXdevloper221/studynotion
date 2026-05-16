@@ -79,16 +79,23 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 //database connect
-database.connectDB();
-//middlewares
-app.use(express.json());
-app.use(cookieParser());
-app.use(
-	cors({
-		origin: "*",
-		credentials: true,
-	})
-)
+async function startApp() {
+  try {
+    await database.connectDB();
+  } catch (error) {
+    console.error('Failed to start app because database connection failed.', error.message || error)
+    process.exit(1)
+  }
+
+  //middlewares
+  app.use(express.json());
+  app.use(cookieParser());
+  app.use(
+    cors({
+      origin: "*",
+      credentials: true,
+    })
+  )
 // app.use((req, res, next) => {
 // 	res.header('Access-Control-Allow-Origin', '*');
 // 	next();
@@ -119,6 +126,8 @@ app.get("/", (req, res) => {
 	});
 });
 
-app.listen(PORT, () => {
-	console.log(`App is running at ${PORT}`)
+startApp().then(() => {
+  app.listen(PORT, () => {
+    console.log(`App is running at ${PORT}`)
+  })
 })
