@@ -125,6 +125,7 @@ app.get("/", (req, res) => {
 		message:'Your server is up and running....'
 	});
 });
+}
 
 startApp().then(() => {
   app.listen(PORT, () => {
