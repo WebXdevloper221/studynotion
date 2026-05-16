@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: study-notion-backend
+    env: node
+    plan: free
+    branch: main
+    buildCommand: npm install
+    startCommand: npm run start
+    autoDeploy: true
+    envVars:
+      - key: NODE_VERSION
+        value: "18"
+      # Add production env vars in Render dashboard, do NOT commit secrets here
+      # - key: MONGODB_URI
+      #   sync: false
+      # - key: MAIL_HOST
+      #   sync: false
+      # - key: MAIL_PORT
+      #   sync: false
+      # - key: MAIL_USER
+      #   sync: false
+      # - key: MAIL_PASS
+      #   sync: false
