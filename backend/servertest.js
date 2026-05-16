@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const hash = "$2b$10$wrR66NNyMaNFFv7MLtWatu3XkqW6q70AeLZkTRKCs24SwFPmHKzxG";
 const guess = "your_password_guess";

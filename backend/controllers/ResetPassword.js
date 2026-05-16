@@ -100,7 +100,7 @@ const mongoose = require('mongoose')
 const User = require("../models/User")
 const crypto = require('crypto')
 const mailSender = require('../utils/mailSender');
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcryptjs')
 
 exports.resetPasswordToken = async (req,res) => {
 
