@@ -3,5 +3,8 @@
   "private": true,
   "scripts": {
     "build": "cd my-app && npm install && CI=false npm run build && cp -R build ../build"
+  },
+  "dependencies": {
+    "mongodb": "^7.2.0"
   }
 }
