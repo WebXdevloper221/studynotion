@@ -117,9 +117,8 @@ app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/payment", paymentRoutes);
 
 
-//def route
-
-app.get("/", (req, res) => {
+// health routes
+app.get(["/", "/api/v1"], (req, res) => {
 	return res.json({
 		success:true,
 		message:'Your server is up and running....'
