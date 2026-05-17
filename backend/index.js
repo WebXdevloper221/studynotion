@@ -92,7 +92,7 @@ async function startApp() {
   app.use(cookieParser());
   app.use(
     cors({
-      origin: "*",
+      origin: process.env.ALLOWED_ORIGIN || "http://localhost:3000",
       credentials: true,
     })
   )
