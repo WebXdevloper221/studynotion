@@ -93,7 +93,6 @@ async function startApp() {
   app.use(
     cors({
       origin: "*",
-      origin: process.env.ALLOWED_ORIGIN || "http://localhost:3000",
       credentials: true,
     })
   )
