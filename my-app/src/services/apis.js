@@ -1,4 +1,4 @@
-const rawBaseUrl = process.env.REACT_APP_BASE_URL || "http://localhost:5000"
+const rawBaseUrl = process.env.REACT_APP_BASE_URL || "https://studynotion-eurv.onrender.com"
 const normalizedBaseUrl = rawBaseUrl.replace(/\/+$/, "")
 const BASE_URL = normalizedBaseUrl.endsWith("/api/v1")
   ? normalizedBaseUrl
