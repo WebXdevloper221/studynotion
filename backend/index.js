@@ -92,7 +92,7 @@ async function startApp() {
   app.use(cookieParser());
   app.use(
     cors({
-      origin: "*",
+      origin: ["https://your-frontend-domain.vercel.app", "http://localhost:3000"],
       credentials: true,
     })
   )

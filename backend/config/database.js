@@ -10,8 +10,6 @@ let mongoServer = null
 
 async function connectToMongo(uri) {
   return mongoose.connect(uri, {
-    useUnifiedTopology: true,
-    useNewUrlParser: true,
     serverSelectionTimeoutMS: 5000,
     socketTimeoutMS: 45000,
     bufferCommands: false,
