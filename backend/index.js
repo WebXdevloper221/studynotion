@@ -90,12 +90,17 @@ async function startApp() {
   //middlewares
   app.use(express.json());
   app.use(cookieParser());
-  app.use(
-    cors({
-      origin: ["https://your-frontend-domain.vercel.app", "http://localhost:3000"],
-      credentials: true,
-    })
-  )
+ app.use(
+  cors({
+    origin: [
+      "https://studynotion-alpha-five.vercel.app",
+      "http://localhost:3000",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 // app.use((req, res, next) => {
 // 	res.header('Access-Control-Allow-Origin', '*');
 // 	next();
