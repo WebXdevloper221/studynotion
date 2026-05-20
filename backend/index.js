@@ -30,26 +30,23 @@ const PORT = process.env.PORT || 5000;
 // DATABASE CONNECT
 database.connectDB();
 
-// CORS CONFIG
-const corsOptions = {
-  origin: [
-    "https://studynotion-alpha-five.vercel.app",
-    "http://localhost:3000",
-  ],
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-
 // MIDDLEWARES
 app.use(express.json());
 app.use(cookieParser());
 
 // CORS
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: [
+      "https://studynotion-alpha-five.vercel.app",
+      "http://localhost:3000",
+    ],
+    credentials: true,
+  })
+);
 
-// PREFLIGHT REQUEST HANDLE
-app.options("*", cors(corsOptions));
+// PREFLIGHT
+app.options("*", cors());
 
 // FILE UPLOAD
 app.use(
