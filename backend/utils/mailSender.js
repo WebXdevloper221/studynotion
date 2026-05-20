@@ -31,34 +31,45 @@ require("dotenv").config();
 
 const mailSender = async (email, title, body) => {
   try {
+
+    // CHECK ENV VARIABLES
+    console.log("MAIL_USER:", process.env.MAIL_USER);
+    console.log("MAIL_PASS:", process.env.MAIL_PASS);
+
     if (!process.env.MAIL_USER || !process.env.MAIL_PASS) {
-      throw new Error("MAIL_USER or MAIL_PASS is missing in backend .env");
+      throw new Error("MAIL_USER or MAIL_PASS is missing");
     }
 
+    // CREATE TRANSPORTER
     const transporter = nodemailer.createTransport({
-      host: process.env.MAIL_HOST || "smtp.gmail.com",
-      port: Number(process.env.MAIL_PORT || 465),
-      secure: true,
+      service: "gmail",
+
       auth: {
         user: process.env.MAIL_USER,
         pass: process.env.MAIL_PASS,
       },
-      tls: {
-        rejectUnauthorized: false,
-      },
     });
 
-    let info = await transporter.sendMail({
-      from: `"Pankaj - StudyNotion" <${process.env.MAIL_USER}>`,
+    console.log("Transporter Created Successfully");
+
+    // SEND MAIL
+    const info = await transporter.sendMail({
+      from: `StudyNotion <${process.env.MAIL_USER}>`,
       to: email,
       subject: title,
       html: body,
     });
 
-    console.log("Mail sent:", info.response);
+    console.log("Mail Sent Successfully");
+    console.log(info.response);
+
     return info;
+
   } catch (error) {
-    console.log("Error in mailSender:", error);
+
+    console.log("FULL MAIL ERROR:");
+    console.log(error);
+
     throw error;
   }
 };
