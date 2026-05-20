@@ -27,59 +27,56 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 
-// Database connect
-async function startApp() {
-  try {
-    await database.connectDB();
-  } catch (error) {
-    console.error(
-      "Failed to start app because database connection failed.",
-      error.message || error
-    );
-    process.exit(1);
-  }
+// DATABASE CONNECT
+database.connectDB();
 
-  // Middlewares
-  app.use(express.json());
-  app.use(cookieParser());
+// CORS CONFIG
+const corsOptions = {
+  origin: [
+    "https://studynotion-alpha-five.vercel.app",
+    "http://localhost:3000",
+  ],
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
 
-  // CORS FIX
-  app.use(
-    cors({
-      origin: "https://studynotion-alpha-five.vercel.app",
-      credentials: true,
-      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-      allowedHeaders: ["Content-Type", "Authorization"],
-    })
-  );
+// MIDDLEWARES
+app.use(express.json());
+app.use(cookieParser());
 
-  app.use(
-    fileUpload({
-      useTempFiles: true,
-      tempFileDir: "/tmp",
-    })
-  );
+// CORS
+app.use(cors(corsOptions));
 
-  // Cloudinary connection
-  cloudinaryConnect();
+// PREFLIGHT REQUEST HANDLE
+app.options("*", cors(corsOptions));
 
-  // Routes
-  app.use("/api/v1/auth", userRoutes);
-  app.use("/api/v1/profile", profileRoutes);
-  app.use("/api/v1/course", courseRoutes);
-  app.use("/api/v1/payment", paymentRoutes);
+// FILE UPLOAD
+app.use(
+  fileUpload({
+    useTempFiles: true,
+    tempFileDir: "/tmp",
+  })
+);
 
-  // Health route
-  app.get(["/", "/api/v1"], (req, res) => {
-    return res.json({
-      success: true,
-      message: "Your server is up and running....",
-    });
+// CLOUDINARY CONNECT
+cloudinaryConnect();
+
+// ROUTES
+app.use("/api/v1/auth", userRoutes);
+app.use("/api/v1/profile", profileRoutes);
+app.use("/api/v1/course", courseRoutes);
+app.use("/api/v1/payment", paymentRoutes);
+
+// DEFAULT ROUTE
+app.get("/", (req, res) => {
+  return res.json({
+    success: true,
+    message: "Your server is up and running....",
   });
-}
+});
 
-startApp().then(() => {
-  app.listen(PORT, () => {
-    console.log(`App is running at ${PORT}`);
-  });
+// SERVER START
+app.listen(PORT, () => {
+  console.log(`App is running at ${PORT}`);
 });
