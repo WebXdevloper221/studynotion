@@ -27,12 +27,13 @@ async function sendVerificationOTP(email, otp) {
         console.log("Email sent Successfully: ", mailResponse.response);
     } catch (error) {
         console.log("error occured while sending mails: ", error);
-        throw error;
+        return null;
     }
 }
 
 OTPSchema.pre("save", async function (next) {
     console.log("Mail in pre hook", this.email)
+    // OTP should be persisted even if email provider is temporarily unreachable.
     await sendVerificationOTP(this.email, this.otp);
     next();
 }) 
