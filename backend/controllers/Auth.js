@@ -10,8 +10,16 @@ require('dotenv').config()
 
 exports.sendOtp = async (req,res) => {
     try {
-        const {email} = req.body;
-        console.log("Email in senOtp controller",email)
+        const email = req.body?.email?.trim()?.toLowerCase();
+
+        if (!email) {
+            return res.status(400).json({
+                success: false,
+                message: "Email is required",
+            });
+        }
+
+        console.log("Email in sendOtp controller", email)
         const existingUser = await User.findOne({email});
 
         if(existingUser){
@@ -51,12 +59,10 @@ exports.sendOtp = async (req,res) => {
             createdOtp
         })
     } catch (error) {
-        console.log("otp not create");
+        console.log("otp not create", error);
         return res.status(500).json({
             success:false,
-            
-            
-            message:error.message,
+            message:error.message || "Unable to send OTP. Please try again.",
         })
     }
 }
@@ -97,13 +103,15 @@ exports.signUp = async (req,res) => {
         }
     
         const recentOtp = await OTP.find({email}).sort({createdAt:-1}).limit(1);
-        console.log("Otp in signup page is:",recentOtp[0].otp)
         if (recentOtp.length == 0) {
             return res.status(400).json({
                 success:false,
                 message:'OTP Not Found',
             })
-        } else if(otp !== recentOtp[0].otp){
+        }
+
+        console.log("Otp in signup page is:",recentOtp[0].otp)
+        if(otp !== recentOtp[0].otp){
             return res.status(400).json({
                 success:false,
                 message:"Invalid OTP",
@@ -119,7 +127,7 @@ exports.signUp = async (req,res) => {
             gender:null,
             dateOfBirth: null,
             about:null,
-            contactNumer:null,
+            contactNumber:null,
         });
         
         console.log("Data received in signup is" ,firstName )
